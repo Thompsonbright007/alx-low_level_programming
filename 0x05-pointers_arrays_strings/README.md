@@ -1,1 +1,1 @@
-reset to 98
+pointers arrays and strings
