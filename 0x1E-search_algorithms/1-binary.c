@@ -1,48 +1,68 @@
-#include "search_algos.h"
+#include <stddef.h>
+#include <stdio.h>
 
+
+int binary_helper(int *array, size_t lower, size_t upper, int value);
+void print_arr(int *arr, size_t lower, size_t upper);
 /**
- * binary_search - Searches for a value in a sorted array
- *                 of integers using binary search.
- * @array: A pointer to the first element of the array to search.
- * @size: The number of elements in the array.
- * @value: The value to search for.
+ * binary_search - searches through an array using binary search
  *
- * Return: If the value is not present or the array is NULL, -1.
- *         Otherwise, the index where the value is located.
+ * @array: pointer of the array to search through
+ * @size: size of the array
+ * @value: to search for
+ *
+ * Return: index of the value being search or -1
  */
-
 int binary_search(int *array, size_t size, int value)
 {
-	size_t i, left, right;
-	
-	/* Check if the array is NULL */
-	if (array == NULL)
+	if (!array || size < 1)
 		return (-1);
+	return (binary_helper(array, 0, size - 1, value));
+}
 
-	/* Perform binary search */
-	for (left = 0, right = size - 1; right >= left;)
-	{
-		printf("Searching in array: ");
-		for (i = left; i < right; i++)
-			printf("%d, ", array[i]);
-		printf("%d\n", array[i]);
-		
-		/* Calculate the middle index */
-		i = left + (right - left) / 2;
-		
-		/* If the middle element is the value */
-		if (array[i] == value)
-			/* Return the index */
-			return (i);
-		
-		/* If the middle element is greater than the value */
-		if (array[i] > value)
-			/* Update the right boundary */
-			right = i - 1;
+/**
+ * binary_helper - search array using binary search recursively
+ *
+ * @array: pointer of the array to search
+ * @lower: first element of subarray
+ * @upper: last element of the array
+ * @value: value to search for
+ *
+ * Return: index of found value or -1
+ */
+int binary_helper(int *array, size_t lower, size_t upper, int value)
+{
+	size_t mid;
+
+	print_arr(array, lower, upper);
+	if (upper == lower && array[lower] != value)
+		return (-1);
+	mid = (upper - lower) / 2 + lower;
+	if (array[mid] == value)
+		return (value);
+	else if (array[mid] < value)
+		return (binary_helper(array, mid + 1, upper, value));
+	else
+		return (binary_helper(array, lower, mid - 1, value));
+}
+
+/**
+ * print_arr - prints subarray using first and last indexes
+ *
+ * @arr: array to print from
+ * @lower: first element index of subarray to print
+ * @upper: index of last element
+ *
+ * Return: void
+ */
+void print_arr(int *arr, size_t lower, size_t upper)
+{
+	size_t i;
+
+	printf("Searching in array: ");
+	for (i = lower; i <= upper; i++)
+		if (i != upper)
+			printf("%d, ", arr[i]);
 		else
-			/* Otherwise, update the left boundary */
-			left = i + 1;
-	}
-	/* Value not found, return -1 */
-	return (-1);
+			printf("%d\n", arr[i]);
 }
